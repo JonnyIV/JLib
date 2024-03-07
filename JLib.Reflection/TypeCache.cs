@@ -129,7 +129,7 @@ public class TypeCache : ITypeCache
                 .CustomAttributes.None(a =>
                     a.AttributeType.IsAssignableTo<TvtFactoryAttribute>())
             ).Select(tvtt => new InvalidTypeException(tvtt.GetType(), tvtt.Value,
-                tvtt.Value.FullClassName(true)))
+                tvtt.Value.FullName(true)))
         );
         var discoveryExceptions = exceptions.CreateChild("type discovery failed");
         try
@@ -228,7 +228,7 @@ public class TypeCache : ITypeCache
             try
             {
                 var tvtValidator = new TypeValidator(typeValueType.CastTo<TypeValueType>(),
-                    typeValueType.GetType().FullClassName());
+                    typeValueType.GetType().FullName());
                 typeValueType.Validate(this, tvtValidator);
                 exceptions.AddChild(tvtValidator);
             }

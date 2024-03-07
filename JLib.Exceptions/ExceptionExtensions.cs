@@ -1,4 +1,5 @@
-﻿using System.Text;
+﻿using JLib.Helper;
+using System.Text;
 
 namespace JLib.Exceptions;
 public static class ExceptionExtensions
@@ -58,27 +59,69 @@ public static class ExceptionExtensions
     /// </summary>
     public static string GetTreeInfo(this AggregateException exception)
     {
-        return new StringBuilder()
-            .Append("│  ")
-            .AppendLine(exception is JLibAggregateException je ? je.UserMessage : exception.Message)
-            .Append("├─")
-            .AppendJoin(Environment.NewLine + "├─",
-                exception.InnerExceptions
-                    .ToLookup(ex => ex.GetType())
-                    .OrderBy(group => group.Key.Name)
-                    .Select(group =>
-                        " " + group.Count() + " " + group.Key.Name + Environment.NewLine +
-                        string.Join(Environment.NewLine,
-                            group.OrderBy(ex => ex.Message)
-                                .Select(ex =>
-                                    (ex is NullReferenceException
-                                        ? ex.ToString()
-                                        : ex.Message.Replace(Environment.NewLine, Environment.NewLine + "│  "))
-                                )
-                        ) + Environment.NewLine
-                    )
-            )
-            .ToString();
+        var sb = new StringBuilder();
+        CreateExceptionInfo(sb, exception);
+        return sb.ToString();
+    }
+
+
+    private static void CreateExceptionInfo(StringBuilder sb, Exception ex, int indentCount = 0)
+    {
+        const string indentTemplate = "│  ";
+        const string branchTemplate = "├─ ";
+
+        /******************************\
+        |           Message            |
+        \******************************/
+        var lineIndex = 0;
+        foreach (var line in (ex is JLibAggregateException jex ? jex.UserMessage : ex.Message)
+                 .Split(Environment.NewLine))
+        {
+            if (indentCount >= 2)
+                sb.AppendMultiple(indentTemplate, indentCount - (lineIndex == 0 ? 1 : 0));
+            if (indentCount >= 1 && lineIndex == 0)
+                sb.Append(branchTemplate);
+            sb.AppendLine(line);
+            lineIndex++;
+        }
+
+        /******************************\
+        |  Aggregate Inner Exceptions  |
+        \******************************/
+        if (ex is AggregateException aggEx && aggEx.InnerExceptions.Any())
+        {
+            sb.AppendMultiple(indentTemplate, indentCount)
+                .Append(branchTemplate)
+                .AppendLine("Inner Exceptions");
+            foreach (var exg in aggEx.InnerExceptions
+                         .GroupBy(iex => iex.GetType()))
+            {
+                sb.AppendMultiple(indentTemplate, indentCount + 1)
+                    .Append(branchTemplate)
+                    .Append(exg.Count())
+                    .Append(' ')
+                    .AppendLine(exg.Key.FullName());
+                foreach (var iex in exg)
+                    CreateExceptionInfo(sb, iex, indentCount + 3);
+            }
+        }
+
+        /******************************\
+        |         Inner Exception      |
+        \******************************/
+        else if (ex is not AggregateException && ex.InnerException is not null)
+        {
+            sb.AppendMultiple(indentTemplate, indentCount)
+                .Append(branchTemplate)
+                .AppendLine("Inner Exception");
+            CreateExceptionInfo(sb, ex.InnerException, indentCount + 2);
+        }
+
+        /******************************\
+        |        new line at end       |
+        \******************************/
+        sb.AppendMultiple(indentTemplate, indentCount)
+            .AppendLine();
     }
 
 }

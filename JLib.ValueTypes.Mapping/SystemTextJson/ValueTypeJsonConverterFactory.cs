@@ -74,7 +74,7 @@ public class ValueTypeJsonConverterFactory : JsonConverterFactory
             return CreateValueTypeConverter(type);
         if(IsValueTypeDictionary(type))
             return CreateValueTypeDictionaryConverter(type);
-        throw new NotSupportedException($"Type {type.FullClassName()} is not supported");
+        throw new NotSupportedException($"Type {type.FullName()} is not supported");
     }
 
     private bool IsValueType(Type type)
@@ -92,7 +92,7 @@ public class ValueTypeJsonConverterFactory : JsonConverterFactory
             _ when nativeType.IsNumber() => typeof(NumericValueTypeJsonConverter<,>).MakeGenericType(typeToConvert, nativeType),
             _ when nativeType.IsGuid() => typeof(GuidValueTypeJsonConverter<>).MakeGenericType(typeToConvert),
             _ => throw new NotSupportedException(
-                $"Type {typeToConvert.FullClassName()} is not supported. Only Numbers, strings and Guids are supported")
+                $"Type {typeToConvert.FullName()} is not supported. Only Numbers, strings and Guids are supported")
         };
 
         if (_mapper is null)
@@ -100,7 +100,7 @@ public class ValueTypeJsonConverterFactory : JsonConverterFactory
 
         return Activator.CreateInstance(converterType, _mapper)
                    ?.As<JsonConverter>()
-               ?? throw new InvalidOperationException($"Activator failed to create converter of type {converterType.FullClassName()}");
+               ?? throw new InvalidOperationException($"Activator failed to create converter of type {converterType.FullName()}");
 
     }
 
@@ -114,7 +114,7 @@ public class ValueTypeJsonConverterFactory : JsonConverterFactory
     private JsonConverter CreateValueTypeDictionaryConverter(Type typeToConvert)
     {
         var args = typeToConvert.GetAnyInterface<IDictionary<Ignored, Ignored>>()?.GenericTypeArguments
-            ?? throw new NotSupportedException($"{typeToConvert.FullClassName(true)} is not a dictionary");
+            ?? throw new NotSupportedException($"{typeToConvert.FullName(true)} is not a dictionary");
         var keyValueType = args[0];
         var keyNativeType = keyValueType.GetAnyBaseType<ValueType<Ignored>>()?.GenericTypeArguments.Single()
             ?? throw new InvalidSetupException("native type not found");
@@ -125,7 +125,7 @@ public class ValueTypeJsonConverterFactory : JsonConverterFactory
 
         return Activator.CreateInstance(converterType, _mapper)
                    ?.As<JsonConverter>()
-               ?? throw new InvalidOperationException($"Activator failed to create converter of type {converterType.FullClassName()}");
+               ?? throw new InvalidOperationException($"Activator failed to create converter of type {converterType.FullName()}");
     }
 
 }

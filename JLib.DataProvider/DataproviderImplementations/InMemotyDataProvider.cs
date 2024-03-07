@@ -39,7 +39,7 @@ public class InMemoryDataProvider<TEntity> : DataProviderRBase<TEntity>, ISource
         else
             _idGenerator = id => id;
 
-        logger.LogTrace("creating {type}", GetType().FullClassName());
+        logger.LogTrace("creating {type}", GetType().FullName());
     }
 
     private void CreateAndSetId(TEntity entity)

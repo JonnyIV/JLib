@@ -52,11 +52,11 @@ public abstract class TvtFactoryAttribute : Attribute
         {
             var ctor = type.GetConstructor(Array.Empty<Type>())
                 ?? throw new InvalidSetupException(
-                    $"Type {type.FullClassName(true)} does not have an empty constructor");
+                    $"Type {type.FullName(true)} does not have an empty constructor");
 
             _factory = ctor.Invoke(null) as ITypeValueTypeFilter
                 ?? throw new InvalidSetupException(
-                    $"Type {type.FullClassName(true)} does not implement {nameof(ITypeValueTypeFilter)}");
+                    $"Type {type.FullName(true)} does not implement {nameof(ITypeValueTypeFilter)}");
         }
 
         public override bool Filter(Type type) => _factory.Filter(type);

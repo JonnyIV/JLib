@@ -41,7 +41,7 @@ public record AutoMapperProfileType(Type Value) : TypeValueType(Value)
                     : p.ParameterType == typeof(ILogger<>).MakeGenericType(Value)
                         ? CreateLogger.MakeGenericMethod(Value).Invoke(null, new object[] { loggerFactory })
                         : throw new InvalidOperationException(
-                        $"unexpected ctor parameter {p.Name} of type {p.ParameterType.Name} in {Value.FullClassName()}")
+                        $"unexpected ctor parameter {p.Name} of type {p.ParameterType.Name} in {Value.FullName()}")
         ).ToArray();
 
         return ctor.Invoke(args).As<Profile>()

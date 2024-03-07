@@ -82,12 +82,12 @@ public class ValueTypeProfile : Profile
 
 
             logger.LogTrace("            {tvt}? => {tNative}?", typeof(TValueType).Name,
-                typeof(TNative?).FullClassName());
+                typeof(TNative?).FullName());
             profile.CreateMap<TValueType, TNative?>().ConvertUsing(vt => vt == null ? null : vt.Value);
 
 
             logger.LogTrace("            {tNative}? => {tvt}?",
-                typeof(TNative?).FullClassName(), typeof(TValueType).Name);
+                typeof(TNative?).FullName(), typeof(TValueType).Name);
             profile.CreateMap<TNative?, TValueType?>().ConvertUsing(
                 new CtorReplacementExpressionVisitor<TValueType?, TNative?>().Visit(
                     v => v.HasValue

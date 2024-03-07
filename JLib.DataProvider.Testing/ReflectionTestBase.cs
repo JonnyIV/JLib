@@ -28,7 +28,7 @@ public abstract class ReflectionTestBase
 
     protected ReflectionTestBase(ITestOutputHelper testOutput, ITypePackage typePackage)
     {
-        _exceptions = new ExceptionBuilder(GetType().FullClassName());
+        _exceptions = new ExceptionBuilder(GetType().FullName());
         _testOutput = testOutput;
         _typePackage = typePackage;
         _loggerFactory = new LoggerFactory()
@@ -97,7 +97,7 @@ public abstract class ReflectionTestBase
                     },
                     {
                         "includedTypes",
-                        content.Select(c=>c.FullClassName(true))
+                        content.Select(c=>c.FullName(true))
                     }
                 }
             },

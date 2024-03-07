@@ -39,7 +39,7 @@ public class PropertyInfoValidator : ValueValidator<PropertyInfo>
     public PropertyInfoValidator ShouldBeOfType(Type propertyType)
     {
         if (Value.ReflectedType != propertyType)
-            AddError($"must be of type {propertyType.FullClassName()}");
+            AddError($"must be of type {propertyType.FullName()}");
         return this;
     }
 
@@ -74,7 +74,7 @@ public class PropertyInfoValidator : ValueValidator<PropertyInfo>
         where TAttribute : Attribute
     {
         if (!Value.HasCustomAttribute<TAttribute>())
-            AddError($"Should have {typeof(TAttribute).FullClassName(true)}", hint);
+            AddError($"Should have {typeof(TAttribute).FullName(true)}", hint);
     }
 
 }

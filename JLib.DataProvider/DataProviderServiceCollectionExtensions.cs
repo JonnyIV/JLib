@@ -24,8 +24,8 @@ public static class DataProviderServiceCollectionExtensions
         var invalidRepos = groupedRepos
             .Where(x => x.Value.Count() > 1)
             .Select(group => new InvalidSetupException(
-                $"multiple repos have been provided for data object {group.Key.Value.FullClassName(true)}:" +
-                $" {string.Join(", ", group.Value.Select(repo => repo.Value.FullClassName(true)).OrderBy(r => r))}"))
+                $"multiple repos have been provided for data object {group.Key.Value.FullName(true)}:" +
+                $" {string.Join(", ", group.Value.Select(repo => repo.Value.FullName(true)).OrderBy(r => r))}"))
             .ToArray();
 
         if (invalidRepos.Any())
@@ -109,7 +109,7 @@ public static class DataProviderServiceCollectionExtensions
         filter ??= _ => true;
         forceReadOnly ??= _ => false;
         var implementation = typeof(TImplementation).TryGetGenericTypeDefinition();
-        var msg = typeof(TTvt).FullClassName();
+        var msg = typeof(TTvt).FullName();
         exceptions = exceptions.CreateChild(msg);
 
         services.AddGenericServices(typeCache, implementation, implementation,
@@ -145,11 +145,11 @@ public static class DataProviderServiceCollectionExtensions
             string errorText =
                 dataProviderIsReadOnly
                     ? readOnlyForced
-                        ? $"The data provider Implementation {impl.FullClassName(true)} is forced read only but the Repository {repo.Value.FullClassName(true)} can write data. {Environment.NewLine}" +
+                        ? $"The data provider Implementation {impl.FullName(true)} is forced read only but the Repository {repo.Value.FullName(true)} can write data. {Environment.NewLine}" +
                           $"Not forcing the DataProvider to be read only or implementing {nameof(IDataProviderRw<IEntity>)} will solve this issue"
-                        : $"The data provider Implementation {impl.FullClassName(true)} is read only but the Repository {repo.Value.FullClassName(true)} can write data. {Environment.NewLine}" +
+                        : $"The data provider Implementation {impl.FullName(true)} is read only but the Repository {repo.Value.FullName(true)} can write data. {Environment.NewLine}" +
                           $"You can resolve this issue by not implementing {nameof(IDataProviderRw<IEntity>)} with the Repository or using a data provider which implements {nameof(ISourceDataProviderRw<IEntity>)}"
-                    : $"The data provider Implementation {impl.FullClassName(true)} can write data but the Repository {repo.Value.FullClassName(true)} can not. {Environment.NewLine}" +
+                    : $"The data provider Implementation {impl.FullName(true)} can write data but the Repository {repo.Value.FullName(true)} can not. {Environment.NewLine}" +
                       $"Force the dataProvider to be ReadOnly or Implement {nameof(IDataProviderRw<IEntity>)} with the repository.";
             exceptions.Add(new InvalidSetupException(errorText));
         }

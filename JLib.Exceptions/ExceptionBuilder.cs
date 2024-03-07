@@ -50,7 +50,7 @@ public sealed class ExceptionBuilder : IExceptionProvider, IDisposable
     {
         lock (_exceptionLock)
             lock (_childrenLock)
-                return _exceptions.Count == 0 || _children.Any(c => c.HasErrors());
+                return _exceptions.Count > 0 || _children.Any(c => c.HasErrors());
     }
 
     /// <summary>

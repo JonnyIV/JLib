@@ -27,7 +27,7 @@ public abstract class DataProviderRBase<TDataObject> : IDataProviderR<TDataObjec
             .ToDictionary(x => x.Id);
         ids.Except(res.Keys)
             .Select(id => new KeyNotFoundException(
-                "could not find " + typeof(TDataObject).FullClassName() + ": " + id))
+                "could not find " + typeof(TDataObject).FullName() + ": " + id))
             .ThrowExceptionIfNotEmpty("Some Keys could not be found");
         return res;
     }

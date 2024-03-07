@@ -26,7 +26,7 @@ public static class DataProviderHelper
             return properties;
         }
 
-        properties.Add("service", serviceType.FullClassName());
+        properties.Add("service", serviceType.FullName());
 
         if (!serviceType.ImplementsAny<IDataProviderR<IgnoredDataObject>>())
         {
@@ -41,10 +41,10 @@ public static class DataProviderHelper
         }
 
 
-        properties.Add("implementation", implementationType.FullClassName());
+        properties.Add("implementation", implementationType.FullName());
 
         properties.Add("implemented services",
-            implementationType.GetInterfaces().Select(i => i.FullClassName()).ToArray());
+            implementationType.GetInterfaces().Select(i => i.FullName()).ToArray());
 
 
         var ctor = implementationType.GetConstructors().First();

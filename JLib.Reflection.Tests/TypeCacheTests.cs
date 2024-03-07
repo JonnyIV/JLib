@@ -86,8 +86,8 @@ public class TypeCacheTests : IDisposable
                                 t => new Dictionary<string, object?>()
                                     {
                                         { "Kind", t.IsClass?"Class":t.IsValueType?"struct":t.IsInterface?"Interface":"other"},
-                                        { "Attributes", t.GetCustomAttributes<Attribute>().Select(a=>a.GetType().FullClassName()).OrderBy(x=>x) },
-                                        { "ImplementedInterfaces", t.GetInterfaces().Select(t2=>t2.FullClassName()).OrderBy(i=>i)},
+                                        { "Attributes", t.GetCustomAttributes<Attribute>().Select(a=>a.GetType().FullName()).OrderBy(x=>x) },
+                                        { "ImplementedInterfaces", t.GetInterfaces().Select(t2=>t2.FullName()).OrderBy(i=>i)},
                                     }
                                 )
                         }

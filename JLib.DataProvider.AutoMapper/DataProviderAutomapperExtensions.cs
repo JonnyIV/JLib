@@ -40,7 +40,7 @@ public static class DataProviderAutomapperExtensions
                             if (repo is { CanWrite: true })
                             {
                                 exceptions.Add(new InvalidSetupException(
-                                    $"Repository {repo.Value.FullClassName()} for Entity {destinationType.Value.FullClassName()} can write data but the mapping is configured to provide a {nameof(IDataProviderR<IDataObject>)}." +
+                                    $"Repository {repo.Value.FullName()} for Entity {destinationType.Value.FullName()} can write data but the mapping is configured to provide a {nameof(IDataProviderR<IDataObject>)}." +
                                     Environment.NewLine +
                                     $"To fix this issue either set the mapping to ReadWrite or don't implement {nameof(IDataProviderRw<IEntity>)} on the repository"));
                                 continue;

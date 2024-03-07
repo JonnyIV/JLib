@@ -41,7 +41,7 @@ where TKeyNative : notnull
         var converter = options.GetConverter(mapped.GetType());
         var writeMi = converter.GetType().GetMethod(nameof(JsonConverter<Ignored>.Write))
             ?? throw new InvalidSetupException(
-                $"Write method not found on converter {converter.GetType().FullClassName()}");
+                $"Write method not found on converter {converter.GetType().FullName()}");
 
         writeMi.Invoke(converter, new object[] { writer, mapped, options });
     }

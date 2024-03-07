@@ -36,7 +36,7 @@ public interface IAuthorizationInfo<TDataObject> : IAuthorizationInfo
         if (DataObject(dataObject))
             return null;
         return new UnauthorizedAccessException(
-            $"you are not allowed to access the DataObject {typeof(TDataObject).FullClassName()} {dataObject.Id}");
+            $"you are not allowed to access the DataObject {typeof(TDataObject).FullName()} {dataObject.Id}");
     }
 }
 

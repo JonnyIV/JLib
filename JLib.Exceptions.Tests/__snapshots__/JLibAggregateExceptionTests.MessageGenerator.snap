@@ -1,0 +1,42 @@
+﻿test
+├─ Inner Exceptions
+│  ├─ 3 Exception
+│  │  ├─ ex
+│  │  │  
+│  │  ├─ ex2
+│  │  │  ├─ Inner Exception
+│  │  │  │  ├─ inner
+│  │  │  │  │  ├─ Inner Exception
+│  │  │  │  │  │  ├─ inner2
+│  │  │  │  │  │  │  
+│  │  │  │  │  
+│  │  │  
+│  │  ├─ last
+│  │  │  
+│  ├─ 2 JLibAggregateException
+│  │  ├─ child
+│  │  │  ├─ Inner Exceptions
+│  │  │  │  ├─ 2 Exception
+│  │  │  │  │  ├─ child ex
+│  │  │  │  │  │  
+│  │  │  │  │  ├─ child ex 2
+│  │  │  │  │  │  ├─ Inner Exception
+│  │  │  │  │  │  │  ├─ child ex inner
+│  │  │  │  │  │  │  │  
+│  │  │  │  │  │  
+│  │  │  │  ├─ 1 JLibAggregateException
+│  │  │  │  │  ├─ inner3
+│  │  │  │  │  │  ├─ Inner Exceptions
+│  │  │  │  │  │  │  ├─ 1 Exception
+│  │  │  │  │  │  │  │  ├─ sub child
+│  │  │  │  │  │  │  │  │  second line
+│  │  │  │  │  │  │  │  │  
+│  │  │  │  │  │  
+│  │  │  
+│  │  ├─ last child
+│  │  │  ├─ Inner Exceptions
+│  │  │  │  ├─ 1 Exception
+│  │  │  │  │  ├─ last child exception
+│  │  │  │  │  │  
+│  │  │  
+

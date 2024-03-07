@@ -31,7 +31,7 @@ public abstract class DataPackage
     {
         var property = GetType().GetProperty(propertyName, PropertyDiscoveryBindingFlags) ??
                        throw new InvalidSetupException(
-                           $"property {propertyName} not found on {GetType().FullClassName()}");
+                           $"property {propertyName} not found on {GetType().FullName()}");
         return new DataPackageValues.IdGroupName(property).Value + "." + property.Name;
     }
 

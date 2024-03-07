@@ -13,7 +13,7 @@ public static class TypeExtensions
         catch (Exception e)
         {
             throw new InvalidOperationException(
-                $"adding <{string.Join(", ", typeArguments.Select(x => x.FullClassName(true)))}> as typeArguments to type {type.FullClassName(true)} failed: {Environment.NewLine}{e.Message}",
+                $"adding <{string.Join(", ", typeArguments.Select(x => x.FullName(true)))}> as typeArguments to type {type.FullName(true)} failed: {Environment.NewLine}{e.Message}",
                 e);
         }
     }

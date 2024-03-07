@@ -17,7 +17,7 @@ public abstract record StringValueType(string Value) : ValueType<string>(Value)
     /// <param name="validate">a validator which is executed when the value is created</param>
     protected StringValueType(string value, Action<StringValidator>? validate) : this(value)
     {
-        var validator = new StringValidator(Value, GetType().FullClassName());
+        var validator = new StringValidator(Value, GetType().FullName());
         validate?.Invoke(validator);
         validator.CastTo<IExceptionProvider>().GetException()?.Throw();
     }

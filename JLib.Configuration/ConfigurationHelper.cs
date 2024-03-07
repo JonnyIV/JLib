@@ -77,12 +77,12 @@ public static class ConfigurationHelper
             var environmentType = sectionEnvironment is not null ? "override" : "topLevel";
             logger.LogInformation(
                 "Loading section {environment}.{section} ({sectionType}). Environment is defined in {environmentType}",
-                environment, configSectionName, typeof(T).FullClassName(true), environmentType);
+                environment, configSectionName, typeof(T).FullName(true), environmentType);
             sectionInstance = sectionInstance.GetSection(environment);
         }
         else
             logger.LogInformation("Loading section {section} ({sectionType})", configSectionName,
-                typeof(T).FullClassName(true));
+                typeof(T).FullName(true));
 
         return sectionInstance;
     }
@@ -96,7 +96,7 @@ public static class ConfigurationHelper
     {
         var sectionName = typeof(T).GetCustomAttribute<ConfigSectionNameAttribute>()?.SectionName
                           ?? throw new InvalidSetupException(
-                              $"missing {nameof(ConfigSectionNameAttribute)} on class {typeof(T).FullClassName()}");
+                              $"missing {nameof(ConfigSectionNameAttribute)} on class {typeof(T).FullName()}");
         return config.GetSection<T>(sectionName.Value, loggerFactory);
     }
 

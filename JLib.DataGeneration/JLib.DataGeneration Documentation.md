@@ -12,6 +12,14 @@ there are two variants of ids: property and named ids.
 A property id is defined by adding a property of one of the types noted above to the data package.
 The getter should be public and the setter must be present and protected.
 To get the property id of another package, inject the package and access the property.
+#### Runtime IDs
+A runtime id is required when Ids are created at runtime, for example when creating a new entity in the database.
+To resolve the issue of being unable to resolve this id, an abstraction layer is used.
+When running production code, the `JLib.DataGeneration.Abstractions` package can be used to create IDs using the `IIdGenerator`. It can be added to the service collection via `IdGeneratorServiceCollectionExtensions.AddIdGenerator`.
+When running tests, another `IIdGenerator` will be added automatically when calling `DataPackageExtensions.AddDataPackages`. 
+By injecting the implementation `TestingidGenerator` additional method for creating int and string ids are porovided.
+This IdGenerator uses the Stacktrace, specifically the identity (class + method name + generic argument count / generic parameters + parameters) of the caller of the `TestingIdGenerator`
+Only the generic type arguments of the method are included in the identity due to technical limitations.
 #### Named IDs
 A named id is defined by getting it from the datapackage base class. the name must be unique per dataPackage.
 NamedIDs should be used when it is not neccessary to reference this entity from another entity like when creating a n:m reference entity.

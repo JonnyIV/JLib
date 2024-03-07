@@ -43,7 +43,7 @@ public sealed class TypePackage : ITypePackage
     /// </summary>
     public static ITypePackage GetNested(params Type[] types)
         => new TypePackage(types.SelectMany(x => x.GetNestedTypes()), null,
-            "nested types of " + string.Join(", ", types.Select(x => x.FullClassName())));
+            "nested types of " + string.Join(", ", types.Select(x => x.FullName())));
 
     /// <summary>
     /// creates a <see cref="ITypePackage"/> which contains all types nested in <typeparamref nameTemplate="T"/> but not <typeparamref nameTemplate="T"/> itself.
@@ -135,7 +135,7 @@ public sealed class TypePackage : ITypePackage
         if (package.Types.Count() <= 10 || includeTypes)
         {
             foreach (var type in package.Types)
-                sb.Append(indentStr).Append("│   ").AppendLine(type.FullClassName());
+                sb.Append(indentStr).Append("│   ").AppendLine(type.FullName());
         }
         if (package.Children.Any())
         {

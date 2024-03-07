@@ -1,0 +1,14 @@
+{
+  "__registry__": {
+    "IdIncrement": 0
+  },
+  "TestingIdGeneratorTests": {
+    "[Default]CreateGuid_ShouldReturnNewGuid()-1": "ec59f5b1-e545-45e7-97a6-a496bb4e5ff8"
+  },
+  "TestingIdGeneratorTests.Nested<>": {
+    "[Default]CreateId<,>()-1": "9987f44e-4a70-4b21-aa9e-22a0a1c9e36e",
+    "[Default]CreateId<>(System.Int32)-1": "ee1c14a4-c1eb-4410-be4d-59e246a89ebe",
+    "[Default]CreateId<>(System.Int32)-2": "7fa85fea-f2a3-4e34-8962-c63e7937d61f",
+    "[otherScope]CreateId<>(System.Int32)-1": "4475e35f-a7c9-4e5e-b68e-d309800a476c"
+  }
+}

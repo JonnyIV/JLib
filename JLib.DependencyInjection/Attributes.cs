@@ -37,6 +37,6 @@ public class ServiceImplementationOverrideAttribute : Attribute
         MatchServiceInterfacesOfType = matchServiceInterfacesOfType;
         if (matchServiceInterfacesOfType?.IsClass == false)
             throw new InvalidSetupException(
-                $"the given {nameof(matchServiceInterfacesOfType)} {matchServiceInterfacesOfType.FullClassName()} is not a class and therefore not a valid implementation");
+                $"the given {nameof(matchServiceInterfacesOfType)} {matchServiceInterfacesOfType.FullName()} is not a class and therefore not a valid implementation");
     }
 }

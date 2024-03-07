@@ -17,7 +17,7 @@ public class TypeValidator : ValueValidator<Type>
 
     protected override Exception? BuildException(IReadOnlyCollection<string> messages, IReadOnlyCollection<IExceptionProvider> provider)
         => JLibAggregateException.ReturnIfNotEmpty(
-            $"{_valueType.Value.FullClassName(true)} is not a valid {_valueType.GetType().FullClassName(true)}",
+            $"{_valueType.Value.FullName(true)} is not a valid {_valueType.GetType().FullName(true)}",
             messages.Select(msg => new InvalidTypeException(_valueType.GetType(), _valueType.Value, msg)));
 
     public TypeValidator ValidateProperties(Func<PropertyInfo, bool> filter, Action<PropertyInfoValidator> validator)
@@ -73,7 +73,7 @@ public class TypeValidator : ValueValidator<Type>
     public TypeValidator ShouldImplementAny<TInterface>(string? hint = null)
     {
         if (!Value.ImplementsAny<TInterface>())
-            AddError($"Should implement any {typeof(TInterface).TryGetGenericTypeDefinition().FullClassName(true)}",
+            AddError($"Should implement any {typeof(TInterface).TryGetGenericTypeDefinition().FullName(true)}",
                 hint);
         return this;
     }
@@ -81,14 +81,14 @@ public class TypeValidator : ValueValidator<Type>
     public TypeValidator ShouldImplement<TInterface>(string? hint = null)
     {
         if (!Value.ImplementsAny<TInterface>())
-            AddError($"Should implement {typeof(TInterface).FullClassName(true)}", hint);
+            AddError($"Should implement {typeof(TInterface).FullName(true)}", hint);
         return this;
     }
 
     public TypeValidator ShouldNotImplementAny<TInterface>(string? hint = null)
     {
         if (Value.ImplementsAny<TInterface>())
-            AddError($"Should not implement {typeof(TInterface).TryGetGenericTypeDefinition().FullClassName(true)}",
+            AddError($"Should not implement {typeof(TInterface).TryGetGenericTypeDefinition().FullName(true)}",
                 hint);
         return this;
     }
@@ -96,7 +96,7 @@ public class TypeValidator : ValueValidator<Type>
         where TAttribute : Attribute
     {
         if (!Value.HasCustomAttribute<TAttribute>())
-            AddError($"Should have {typeof(TAttribute).FullClassName(true)}", hint);
+            AddError($"Should have {typeof(TAttribute).FullName(true)}", hint);
         return this;
     }
 

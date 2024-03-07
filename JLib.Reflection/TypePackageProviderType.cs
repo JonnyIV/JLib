@@ -15,7 +15,7 @@ public record TypePackageProviderType(Type Value) : TypeValueType(Value), IValid
     public static ITypePackage GetInstance(Type typePackageProviderType)
         => typePackageProviderType.GetProperty(InstancePropertyName, typeof(ITypePackage))
                ?.GetValue(null)?.As<ITypePackage>()
-           ?? throw new InvalidSetupException($"Instance of Type Package {typePackageProviderType.FullClassName()} could not be retrieved. it should be named {InstancePropertyName} and be of type {nameof(ITypePackage)}.");
+           ?? throw new InvalidSetupException($"Instance of Type Package {typePackageProviderType.FullName()} could not be retrieved. it should be named {InstancePropertyName} and be of type {nameof(ITypePackage)}.");
 
     /// <summary>
     /// returns the <see cref="ITypePackage"/> for the current assembly. It must be declared as follows:

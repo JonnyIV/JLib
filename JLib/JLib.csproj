@@ -4,6 +4,7 @@
     <ProjectReference Include="..\JLib.AutoMapper\JLib.AutoMapper.csproj" />
     <ProjectReference Include="..\JLib.Configuration\JLib.Configuration.csproj" />
     <ProjectReference Include="..\JLib.Cqrs\JLib.Cqrs.csproj" />
+    <ProjectReference Include="..\JLib.DataGeneration.Abstractions\JLib.DataGeneration.Abstractions.csproj" />
     <ProjectReference Include="..\JLib.DataGeneration\JLib.DataGeneration.csproj" />
     <ProjectReference Include="..\JLib.DataProvider.AutoMapper\JLib.DataProvider.AutoMapper.csproj" />
     <ProjectReference Include="..\JLib.DataProvider.EfCore\JLib.DataProvider.EfCore.csproj" />
@@ -17,6 +18,7 @@
     <ProjectReference Include="..\JLib.Reflection.DependencyInjection\JLib.Reflection.DependencyInjection.csproj" />
     <ProjectReference Include="..\JLib.Reflection.HotChocolate.Query\JLib.Reflection.HotChocolate.Query.csproj" />
     <ProjectReference Include="..\JLib.Reflection\JLib.Reflection.csproj" />
+    <ProjectReference Include="..\JLib.SystemTextJson\JLib.SystemTextJson.csproj" />
     <ProjectReference Include="..\JLib.ValueTypes.Mapping\JLib.ValueTypes.Mapping.csproj" />
     <ProjectReference Include="..\JLib.ValueTypes\JLib.ValueTypes.csproj" />
   </ItemGroup>

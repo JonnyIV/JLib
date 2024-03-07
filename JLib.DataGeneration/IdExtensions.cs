@@ -12,7 +12,7 @@ public struct IdSnapshotInformation : IComparable<IdSnapshotInformation>
         this.IdGroupName = idIdentifier.IdGroupName.Value;
         this.IdName = idIdentifier.IdName.Value;
         this.Value = ExtractNativeType(value);
-        this.IdType = value?.GetType().FullClassName();
+        this.IdType = value?.GetType().FullName();
     }
 
     public readonly int CompareTo(IdSnapshotInformation other) => Value?.ToString()?.CompareTo(other.Value?.ToString()) ?? -1;
@@ -41,7 +41,7 @@ public record struct IdInformation(Type Type, DataPackageValues.IdIdentifier Ide
 {
     public readonly int CompareTo(IdInformation other) => Value?.ToString()?.CompareTo(other.Value?.ToString()) ?? -1;
 
-    public readonly override string ToString() => $"{Type.FullClassName()} {Identifier} = {Value}";
+    public readonly override string ToString() => $"{Type.FullName()} {Identifier} = {Value}";
 
 
     public readonly IdSnapshotInformation ToSnapshotInfo()
@@ -93,7 +93,7 @@ public static class IdExtensions
         }
 
         string GetInfoString(DataPackageValues.IdIdentifier? identifier) =>
-            $"{value?.GetType().FullClassName()} {identifier} = {nativeValue}";
+            $"{value?.GetType().FullName()} {identifier} = {nativeValue}";
     }
 
     /// <summary>

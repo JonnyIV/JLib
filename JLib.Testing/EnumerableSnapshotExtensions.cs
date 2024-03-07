@@ -15,12 +15,12 @@ public static class EnumerableSnapshotExtensions
         => source.ToLookup(tvt => tvt.Value.Namespace ?? "")
             .OrderBy(x => x.Key)
             .ToDictionary(tvtGroup1 => tvtGroup1.Key, tvt => tvt
-                .ToLookup(tvt1 => tvt1.GetType().FullClassName(true))
+                .ToLookup(tvt1 => tvt1.GetType().FullName(true))
                 .OrderBy(x => x.Key)
                 .ToDictionary(
                     tvtGroup2 => tvtGroup2.Key,
                     tvtGroup2 => tvtGroup2
-                        .Select(tvt2 => tvt2.Value.FullClassName(true))
+                        .Select(tvt2 => tvt2.Value.FullName(true))
                         .OrderBy(x => x)
                 )
             );
@@ -49,7 +49,7 @@ public static class EnumerableSnapshotExtensions
             return s.ServiceProvider;
         });
         var res = services.ToLookup(
-                x => x.ServiceType.GenericTypeArguments.LastOrDefault()?.FullClassName(true)
+                x => x.ServiceType.GenericTypeArguments.LastOrDefault()?.FullName(true)
                      ?? "non-generic",
                 serviceDescriptor =>
                 {
@@ -68,14 +68,14 @@ public static class EnumerableSnapshotExtensions
                     {
                         serviceDescriptor.Lifetime,
                         ImplementationSource = implementationSrc,
-                        ServiceType = serviceDescriptor.ServiceType.TryGetGenericTypeDefinition().FullClassName(true),
+                        ServiceType = serviceDescriptor.ServiceType.TryGetGenericTypeDefinition().FullName(true),
                         ServiceArguments = GetTypeArgs(serviceDescriptor.ServiceType),
-                        ImplementationType = implementation?.TryGetGenericTypeDefinition().FullClassName(true),
+                        ImplementationType = implementation?.TryGetGenericTypeDefinition().FullName(true),
                         ImplementationTypeArguments = GetTypeArgs(implementation),
                     };
 
                     static string[] GetTypeArgs(Type? t)
-                        => t?.GenericTypeArguments.Select(t => t.FullClassName(true)).ToArray() ??
+                        => t?.GenericTypeArguments.Select(t => t.FullName(true)).ToArray() ??
                            Array.Empty<string>();
                 })
             .OrderBy(x => x.Key)

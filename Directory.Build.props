@@ -19,6 +19,7 @@
 
         <PackageAssemblies>
             JLib.DataGeneration
+            JLib.DataGeneration.Abstractions
             JLib.DataProvider
             JLib.DataProvider.AutoMapper
             JLib.DataProvider.EfCore

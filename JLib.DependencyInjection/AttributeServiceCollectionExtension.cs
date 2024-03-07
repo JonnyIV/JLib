@@ -153,26 +153,26 @@ public static class AttributeServiceCollectionExtension
             .Add(typeCache.KnownTypes
                 .Where(t => t.HasCustomAttribute<ServiceImplementationOverrideAttribute>())
                 .Except(overrides.Select(o => o.Implementation))
-                .Select(invalidOverride => new InvalidSetupException(invalidOverride.FullClassName()))
+                .Select(invalidOverride => new InvalidSetupException(invalidOverride.FullName()))
             );
 
         // check for missing service interfaces in override
         foreach (var @override in overrides.Where(o => o.overriddenImplementation is not null))
         {
-            var subEx = exceptions.CreateChild($"override {@override.Implementation.FullClassName()} is invalid");
+            var subEx = exceptions.CreateChild($"override {@override.Implementation.FullName()} is invalid");
 
             var overridden = serviceDetails
                 .SingleOrDefault(s => s.Implementation == @override.overriddenImplementation);
             if (overridden is null)
             {
                 subEx.Add(new InvalidSetupException(
-                    $"implementation is set to match ${@override.overriddenImplementation?.FullClassName()}, but this class does not have any services associated"));
+                    $"implementation is set to match ${@override.overriddenImplementation?.FullName()}, but this class does not have any services associated"));
                 continue;
             }
             exceptions
                 .CreateChild("missing services")
                 .Add(overridden.Services.Except(@override.Services)
-                    .Select(overriddenService => new InvalidSetupException(overriddenService.FullClassName()))
+                    .Select(overriddenService => new InvalidSetupException(overriddenService.FullName()))
                 );
         }
 
@@ -193,7 +193,7 @@ public static class AttributeServiceCollectionExtension
                             implementationType,
                             implementationType,
                             implementationLifetime
-                                ?? throw new InvalidSetupException($"{implementationType.FullClassName(true)} service implementation lifetime not found")
+                                ?? throw new InvalidSetupException($"{implementationType.FullName(true)} service implementation lifetime not found")
                             ));
                         break;
                     case 1 when implementationLifetime.HasValue == false
@@ -206,7 +206,7 @@ public static class AttributeServiceCollectionExtension
                             serviceTypes
                                 .Single()
                                 .GetCustomAttribute<ServiceAttribute>()?.ServiceLifetime
-                                    ?? throw new InvalidSetupException($"{implementationType.FullClassName(true)} => {serviceTypes.Single().FullClassName(true)} service interface lifetime not found")
+                                    ?? throw new InvalidSetupException($"{implementationType.FullName(true)} => {serviceTypes.Single().FullName(true)} service interface lifetime not found")
                           ));
                         break;
                     case 1: // when implementationLifetime.HasValue
@@ -217,7 +217,7 @@ public static class AttributeServiceCollectionExtension
                         if (implementationLifetime.HasValue == false)
                         {
                             exceptions.Add(new InvalidSetupException(
-                                $"{implementationType.FullClassName(true)} => {serviceTypes.Single().FullClassName(true)} service implementation lifetime not found"));
+                                $"{implementationType.FullName(true)} => {serviceTypes.Single().FullName(true)} service implementation lifetime not found"));
                             break;
                         }
                     
@@ -239,13 +239,13 @@ public static class AttributeServiceCollectionExtension
                                 if (serviceLifetime.HasValue == false)
                                 {
                                     exceptions.Add(new InvalidSetupException(
-                                        $"{implementationType.FullClassName(true)} => {serviceType.FullClassName(true)} service interface lifetime not found"));
+                                        $"{implementationType.FullName(true)} => {serviceType.FullName(true)} service interface lifetime not found"));
                                     continue;
                                 }
                                 if (serviceLifetime < implementationLifetime)
                                 {
                                     exceptions.Add(new InvalidSetupException(
-                                        $"{implementationType.FullClassName(true)} => {serviceType.FullClassName(true)} service interface lifetime {serviceLifetime} is less than implementation lifetime {implementationLifetime}"));
+                                        $"{implementationType.FullName(true)} => {serviceType.FullName(true)} service interface lifetime {serviceLifetime} is less than implementation lifetime {implementationLifetime}"));
                                     continue;
                                 }
                                 services.AddAlias(

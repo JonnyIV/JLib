@@ -7,7 +7,7 @@ public record struct ExceptionSnapshotInfo
     (string Type, IReadOnlyCollection<string> MessageLines, IReadOnlyCollection<ExceptionSnapshotInfo> InnerExceptions)
 {
     public ExceptionSnapshotInfo(Exception exception) : this(
-        exception.GetType().FullClassName(true),
+        exception.GetType().FullName(true),
         (exception.As<JLibAggregateException>()
              ?.UserMessage
          ?? exception.Message)

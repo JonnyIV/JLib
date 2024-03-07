@@ -1,4 +1,8 @@
-﻿namespace JLib.Helper;
+﻿using System.Reflection;
+using System.Runtime.CompilerServices;
+using System.Text;
+
+namespace JLib.Helper;
 
 public static class TypeHelper
 {
@@ -27,8 +31,8 @@ public static class TypeHelper
             _ => false
         };
     }
-    
-    public static bool IsNullableNumber(this Type type) 
+
+    public static bool IsNullableNumber(this Type type)
         => Nullable.GetUnderlyingType(type)?.IsNumber() is true;
 
     public static IReadOnlyCollection<Type> GetDeclaringTypeTree(this Type type)
@@ -185,11 +189,71 @@ public static class TypeHelper
             : type;
     }
 
+    /// <summary>
+    /// Returns the full name of the method, including the class name, generic parameters or arguments, and parameter names.
+    /// </summary>
+    /// <param name="method">The <see cref="MethodBase"/> representing the method.</param>
+    /// <param name="includeDeclaringType">Specifies whether to include the declared type name in the full method name.</param>
+    /// <param name="includeReflectedType">Specifies whether to include the reflected type name in the full method name.</param>
+    /// <param name="includeParameterName">Specifies whether to include the parameter names in the full method name.</param>
+    /// <param name="includeNamespace">Specifies whether to include the namespace in the class name.</param>
+    /// <returns>The full name of the method.</returns>
+    public static string FullName(this MethodBase method, bool includeDeclaringType, bool includeReflectedType, bool includeParameterName, bool includeNamespace = false)
+    {
+        var result = new StringBuilder();
+        // className
+        if (includeReflectedType)
+            result.Append(method.ReflectedType?.FullName(includeNamespace));
+        if (includeDeclaringType && includeReflectedType)
+            result.Append(':');
+        if (includeDeclaringType)
+            result.Append(method.ReflectedType?.FullName(includeNamespace));
+        if (includeDeclaringType || includeReflectedType)
+            result.Append('.');
+
+
+        // name
+        result.Append(method.Name);
+
+        // generic parameters or arguments
+        if (method.IsGenericMethodDefinition)
+            result.Append('<')
+                .Append(new string(',', method.GetGenericArguments().Length-1))
+                .Append('>');
+        else if (method.IsGenericMethod)
+            result.Append('<')
+                .Append(string.Join(", ", method.GetGenericArguments().Select(a => a.FullName(includeNamespace))))
+                .Append('>');
+
+        // parameters
+        result.Append('(')
+            .AppendJoin(", ", method.GetParameters()
+                .Select(parameter =>
+
+                    parameter.ParameterType.FullName(includeNamespace) +
+                        (includeParameterName ? parameter.Name : "")
+                ))
+            .Append(')');
+
+        return result.ToString();
+    }
+
+    public static IReadOnlyCollection<Type> GetNestingParents(this Type type)
+    {
+        var result = new List<Type>();
+        var current = type;
+        while (current.DeclaringType is not null)
+        {
+            result.Add(current.DeclaringType);
+            current = current.DeclaringType;
+        }
+        return result;
+    }
 
     /// <summary>
     /// the name of the class and its declaring type, excluding the namespace
     /// </summary>
-    public static string FullClassName(this Type type, bool includeNamespace = false)
+    public static string FullName(this Type type, bool includeNamespace = false)
     {
         var name = (type.FullName ?? type.Name);
         string res = name
@@ -203,7 +267,7 @@ public static class TypeHelper
             .Split("`").First();
 
         if (type.IsGenericType)
-            res += $"<{string.Join(", ", type.GenericTypeArguments.Select(a => a.FullClassName(includeNamespace)))}>";
+            res += $"<{string.Join(", ", type.GenericTypeArguments.Select(a => a.FullName(includeNamespace)))}>";
 
         return res;
     }

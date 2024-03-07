@@ -87,12 +87,12 @@ public static class ServiceCollectionHelper
                 var environmentType = sectionEnvironment is not null ? "override" : "topLevel";
                 logger.LogInformation(
                     "Loading section {environment}.{section} ({sectionType}). Environment is defined in {environmentType}",
-                    environment, sectionType.SectionName, sectionType.Value.FullClassName(true), environmentType);
+                    environment, sectionType.SectionName, sectionType.Value.FullName(true), environmentType);
                 sectionInstance = sectionInstance.GetSection(environment);
             }
             else
                 logger.LogInformation("Loading section {section} ({sectionType})", sectionType.SectionName,
-                    sectionType.Value.FullClassName(true));
+                    sectionType.Value.FullName(true));
 
             var specificConfig = configMethod.MakeGenericMethod(sectionType.Value);
 
@@ -245,7 +245,7 @@ public static class ServiceCollectionHelper
         var provided = providedType.GetGenericTypeDefinition();
 
         var msg =
-            $"{nameof(AddGenericAlias)} failed while adding alias {alias.FullClassName(true)} for service {provided.FullClassName(true)} and valueType {typeof(TTvt).FullClassName(true)}";
+            $"{nameof(AddGenericAlias)} failed while adding alias {alias.FullName(true)} for service {provided.FullName(true)} and valueType {typeof(TTvt).FullName(true)}";
         exceptions = exceptions.CreateChild(msg);
 
         logger.LogDebug(
@@ -263,7 +263,7 @@ public static class ServiceCollectionHelper
 
                 logger.LogTrace(
                     "    {valueType,-25}: {alias,-65} as {service,-20}",
-                    valueType.Name, explicitAlias.FullClassName(), explicitService.FullClassName());
+                    valueType.Name, explicitAlias.FullName(), explicitService.FullName());
             }
             catch (Exception e)
             {
@@ -339,7 +339,7 @@ public static class ServiceCollectionHelper
 
                 logger.LogTrace(
                     "    {valueType,-25}: {implementation,-65} as {service,-20}",
-                    valueType.Name, explicitImplementation.FullClassName(), explicitService.FullClassName());
+                    valueType.Name, explicitImplementation.FullName(), explicitService.FullName());
             }
             catch (Exception e)
             {
