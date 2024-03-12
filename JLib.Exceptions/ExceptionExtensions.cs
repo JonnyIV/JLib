@@ -75,6 +75,7 @@ public static class ExceptionExtensions
         \******************************/
         var lineIndex = 0;
         foreach (var line in (ex is JLibAggregateException jex ? jex.UserMessage : ex.Message)
+                 .ReplaceLineEndings()
                  .Split(Environment.NewLine))
         {
             if (indentCount >= 2)

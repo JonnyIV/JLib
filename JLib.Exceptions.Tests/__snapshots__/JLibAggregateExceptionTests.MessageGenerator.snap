@@ -24,12 +24,19 @@
 │  │  │  │  │  │  │  ├─ child ex inner
 │  │  │  │  │  │  │  │  
 │  │  │  │  │  │  
-│  │  │  │  ├─ 1 JLibAggregateException
+│  │  │  │  ├─ 2 JLibAggregateException
 │  │  │  │  │  ├─ inner3
 │  │  │  │  │  │  ├─ Inner Exceptions
 │  │  │  │  │  │  │  ├─ 1 Exception
 │  │  │  │  │  │  │  │  ├─ sub child
 │  │  │  │  │  │  │  │  │  second line
+│  │  │  │  │  │  │  │  │  
+│  │  │  │  │  │  
+│  │  │  │  │  ├─ inner3
+│  │  │  │  │  │  ├─ Inner Exceptions
+│  │  │  │  │  │  │  ├─ 1 Exception
+│  │  │  │  │  │  │  │  ├─ sub child2
+│  │  │  │  │  │  │  │  │  second line2 with \n
 │  │  │  │  │  │  │  │  │  
 │  │  │  │  │  │  
 │  │  │  

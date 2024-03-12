@@ -137,6 +137,11 @@ public static class ServiceCollectionHelper
         where TImpl : TAlias
         where TAlias : notnull
         => serviceCollection.AddAlias<TAlias, TImpl>(ServiceLifetime.Transient);
+    /// <summary>
+    /// injects <paramref name="existing"/> and provides it as <paramref name="alias"/> using a factory, therefore using the same instance
+    /// </summary>
+    public static IServiceCollection AddTransientAlias(this IServiceCollection serviceCollection, Type alias, Type existing)
+        => serviceCollection.AddAlias(alias, existing, ServiceLifetime.Transient);
 
     /// <summary>
     /// injects <typeparamref name="TImpl"/> and provides it as <typeparamref name="TAlias"/> using a factory, therefore using the same instance
@@ -146,12 +151,22 @@ public static class ServiceCollectionHelper
         where TAlias : notnull
         => serviceCollection.AddAlias<TAlias, TImpl>(ServiceLifetime.Scoped);
     /// <summary>
+    /// injects <paramref name="existing"/> and provides it as <paramref name="alias"/> using a factory, therefore using the same instance
+    /// </summary>
+    public static IServiceCollection AddScopedAlias(this IServiceCollection serviceCollection, Type alias, Type existing)
+        => serviceCollection.AddAlias(alias, existing, ServiceLifetime.Scoped);
+    /// <summary>
     /// injects <typeparamref name="TImpl"/> and provides it as <typeparamref name="TAlias"/> using a factory, therefore using the same instance
     /// </summary>
     public static IServiceCollection AddSingletonAlias<TAlias, TImpl>(this IServiceCollection serviceCollection)
         where TImpl : TAlias
         where TAlias : notnull
         => serviceCollection.AddAlias<TAlias, TImpl>(ServiceLifetime.Singleton);
+    /// <summary>
+    /// injects <paramref name="existing"/> and provides it as <paramref name="alias"/> using a factory, therefore using the same instance
+    /// </summary>
+    public static IServiceCollection AddSingletonAlias(this IServiceCollection serviceCollection, Type alias, Type existing)
+        => serviceCollection.AddAlias(alias, existing, ServiceLifetime.Singleton);
 
     /// <summary>
     /// injects <paramref name="existing"/> and provides it as <paramref name="alias"/> using a factory, therefore using the same instance

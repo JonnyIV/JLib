@@ -15,6 +15,7 @@ public class JLibAggregateExceptionTests
         child.Add(new Exception("child ex"));
         child.Add(new Exception("child ex 2", new("child ex inner")));
         child.CreateChild("inner3").Add(new Exception("sub child" + Environment.NewLine + "second line"));
+        child.CreateChild("inner3").Add(new Exception("sub child2\nsecond line2 with \\n"));
         ex.Add(new Exception("last"));
         ex.CreateChild("last child").Add(new Exception("last child exception"));
 
