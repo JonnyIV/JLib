@@ -139,22 +139,82 @@ public class StringValidator : ValueValidator<string?>
     }
 
     /// <summary>
+    /// Validates that the value does not contain the specified value.
+    /// </summary>
+    /// <param name="value">The value to check.</param>
+    /// <returns>The string validator instance.</returns>
+    public StringValidator NotContain(char value)
+    {
+        if (Value != null && Value.Contains(value))
+            AddError($"Value does not contain {value}");
+        return this;
+    }
+
+    /// <summary>
+    /// Validates that the value is a URL of the specified kind.
+    /// </summary>
+    /// <param name="kind">The kind of URL to validate.</param>
+    /// <param name="uriValidator">An optional validator for the created Uri object.</param>
+    /// <returns>The string validator instance.</returns>
+    public StringValidator BeUrl(UriKind kind, Action<Uri>? uriValidator = null)
+    {
+        NotBeNullOrWhitespace()
+        .NotContainWhitespace()
+        .MatchRegex(new (@"^[A-Za-z0-9-._~:/?#@\[\]!$&'()*+,;=%]*$"));
+
+        if (!Uri.TryCreate(Value, kind, out var uriResult))
+            AddError($"Value is not a valid {kind} URL");
+        else
+            uriValidator?.Invoke(uriResult);
+        return this;
+    }
+
+    /// <summary>
+    /// must be an absolute url without query parameters
+    /// </summary>
+    /// <returns></returns>
+    public StringValidator BeBaseUrl()
+        => BeUrl(UriKind.Absolute)
+            .NotContain('?');
+
+    /// <summary>
     /// Validates that the value is a valid HTTPS URL.
     /// </summary>
     /// <returns>The string validator instance.</returns>
-    public StringValidator BeHttpsUrl()
-    {
-        NotBeNullOrWhitespace();
-        NotContainWhitespace();
-        NotContain("<");
-        NotContain(">");
-        StartWith("https://");
-        if (!Uri.TryCreate(Value, UriKind.Absolute, out var uriResult)
-            || uriResult.Scheme != Uri.UriSchemeHttps)
-            AddError("Value is not a valid https uri");
+    public StringValidator BeHttpsUrl() 
+        => BeUrl(UriKind.Absolute, uri =>
+        {
+            if (uri?.Scheme != "https")
+                AddError("Value is not a HTTPS URL");
+        });
 
-        return this;
-    }
+    /// <summary>
+    /// Validates that the value is a valid HTTP URL. this excludes https
+    /// </summary>
+    /// <returns>The string validator instance.</returns>
+    public StringValidator BeHttpUrl() 
+        => BeUrl(UriKind.Absolute, uri =>
+        {
+            if (uri?.Scheme != "http")
+                AddError("Value is not a HTTP URL");
+        });
+    /// <summary>
+    /// Validates that the value is a valid HTTP URL. this excludes https
+    /// </summary>
+    /// <returns>The string validator instance.</returns>
+    public StringValidator BeHttpOrHttpsUrl()
+        => BeUrl(UriKind.Absolute, uri =>
+        {
+            if (uri.Scheme != "http" && uri.Scheme != "https")
+                AddError("Value is not a HTTP or HTTPS URL");
+        });
+
+    /// <summary>
+    /// Validates that the value is a valid HTTP URL.
+    /// </summary>
+    /// <returns>The string validator instance.</returns>
+    public StringValidator BeRelativeUrl() 
+        => BeUrl(UriKind.Relative);
 
     /// <summary>
     /// Validates that the value matches the specified regular expression.
