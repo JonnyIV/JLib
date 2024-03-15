@@ -125,6 +125,42 @@ public class StringValidator : ValueValidator<string?>
             AddError($"Value does not start with {prefix}");
         return this;
     }
+    /// <summary>
+    /// Validates that the value does not start with the specified prefix.
+    /// </summary>
+    /// <param name="prefix">The prefix to check.</param>
+    /// <returns>The string validator instance.</returns>
+    public StringValidator NotStartWith(string prefix)
+    {
+        NotBeNull();
+        if (Value == null || Value.StartsWith(prefix))
+            AddError($"Value does start with {prefix}");
+        return this;
+    }
+    /// <summary>
+    /// Validates that the value starts with the specified prefix.
+    /// </summary>
+    /// <param name="prefix">The prefix to check.</param>
+    /// <returns>The string validator instance.</returns>
+    public StringValidator StartWith(char prefix)
+    {
+        NotBeNull();
+        if (Value == null || !Value.StartsWith(prefix))
+            AddError($"Value does not start with {prefix}");
+        return this;
+    }
+    /// <summary>
+    /// Validates that the value does not start with the specified prefix.
+    /// </summary>
+    /// <param name="prefix">The prefix to check.</param>
+    /// <returns>The string validator instance.</returns>
+    public StringValidator NotStartWith(char prefix)
+    {
+        NotBeNull();
+        if (Value == null || Value.StartsWith(prefix))
+            AddError($"Value does start with {prefix}");
+        return this;
+    }
 
     /// <summary>
     /// Validates that the value does not contain the specified value.
@@ -306,6 +342,39 @@ public class StringValidator : ValueValidator<string?>
     public StringValidator EndWith(string value)
     {
         if (Value?.EndsWith(value) != true)
+            AddError($"the value has to end with '{value}'");
+        return this;
+    }
+    /// <summary>
+    /// Validates that the value ends with the specified value.
+    /// </summary>
+    /// <param name="value">The value to check.</param>
+    /// <returns>The string validator instance.</returns>
+    public StringValidator EndWith(char value)
+    {
+        if (Value?.EndsWith(value) != true)
+            AddError($"the value has to end with '{value}'");
+        return this;
+    }
+    /// <summary>
+    /// Validates that the value ends with the specified value.
+    /// </summary>
+    /// <param name="value">The value to check.</param>
+    /// <returns>The string validator instance.</returns>
+    public StringValidator NotEndWith(string value)
+    {
+        if (Value?.EndsWith(value) != false)
+            AddError($"the value has to end with '{value}'");
+        return this;
+    }
+    /// <summary>
+    /// Validates that the value ends with the specified value.
+    /// </summary>
+    /// <param name="value">The value to check.</param>
+    /// <returns>The string validator instance.</returns>
+    public StringValidator NotEndWith(char value)
+    {
+        if (Value?.EndsWith(value) != false)
             AddError($"the value has to end with '{value}'");
         return this;
     }
