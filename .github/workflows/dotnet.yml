@@ -5,8 +5,6 @@ name: .NET
 
 on:
   push:
-    branches:
-      - dev
     tags:
       # we are not at v1 yet
       - 'v0.*.*-alpha'
