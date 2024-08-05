@@ -9,6 +9,12 @@ namespace JLib.ValueTypes.Tests;
 public class ValidatorTests
 {
 
+    public record DemoNumericString(string Value) : StringValueType(Value)
+    {
+        [Validation]
+        private static void Validate(IValidationContext<string?> must)
+            => must.BeNumeric();
+    }
     public record DemoAsciiString(string Value) : StringValueType(Value)
     {
         [Validation]
@@ -48,4 +54,13 @@ public class ValidatorTests
     public void T2_4()
         => ValueType.GetErrors<DemoAsciiString, string>("\u0868")
             .GetException().Should().NotBeNull();
+
+    [Fact]
+    public void T3_0()
+        => ValueType.GetErrors<DemoNumericString, string>("123")
+            .HasErrors().Should().BeFalse();
+    [Fact]
+    public void T3_1()
+        => ValueType.GetErrors<DemoNumericString, string>("123a")
+            .HasErrors().Should().BeTrue();
 }

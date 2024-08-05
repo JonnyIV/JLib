@@ -99,18 +99,27 @@ internal sealed class ValidationProfile<TValue> : IValidationProfile<TValue>
                 methodErrors.Add("must be private");
             if (method.IsStatic == false)
                 methodErrors.Add("must be static");
-            if (method.GetGenericArguments().FirstOrDefault()
-                    ?.ImplementsAny<IValidationContext<Ignored>>() == false)
+            if (method
+                    .GetParameters()
+                    .FirstOrDefault()
+                    ?.ParameterType
+                    .IsAssignableTo<IValidationContext<TValue>>() != true)
                 methodErrors.Add("must have a single parameter assignable to " + typeof(IValidationContext<TValue>).FullName(true));
 
+            if (validationContextType == typeof(IValidationContext<TValue>)) 
+                continue; // we will just use the base implementation
+
             if (validationContextType?.Implements<IValidationContext<TValue>>() is false or null)
-                methodErrors.Add("parameter is not assignable to " + typeof(IValidationContext<TValue>).FullName(true));
+                methodErrors.Add("parameter is not assignable to " +
+                                 typeof(IValidationContext<TValue>).FullName(true));
             if (validationContextType?.IsInstantiable() is false or null)
                 methodErrors.Add("parameter can not be created (it is either static or an interface)");
             var validationContextCtors = validationContextType?.GetConstructors() ?? Array.Empty<ConstructorInfo>();
             if (validationContextCtors.Length != 1)
                 methodErrors.Add($"the ValidationContext {validationContextType?.FullName()} should have only one constructor");
-            var validationContextCtorParameters = validationContextCtors.FirstOrDefault()?.GetParameters() ?? Array.Empty<ParameterInfo>();
+            var validationContextCtorParameters = 
+                validationContextCtors.FirstOrDefault()?.GetParameters() 
+               ?? Array.Empty<ParameterInfo>();
             if (validationContextCtorParameters.Length != 2)
                 methodErrors.Add($"the ValidationContext {validationContextType?.FullName()} requires exactly 2 parameters");
             if (validationContextCtorParameters.ElementAtOrDefault(0)?.ParameterType != typeof(TValue))
@@ -122,6 +131,8 @@ internal sealed class ValidationProfile<TValue> : IValidationProfile<TValue>
         _validatorFactories = validationMethods.Select(method =>
         {
             var validatorType = method.GetParameters().Single().ParameterType;
+            if (validatorType == typeof(IValidationContext<TValue>))// using the base implementation as noted above
+                validatorType = typeof(ValidationContext<TValue>);
 
             var valueParameter = Expression.Parameter(typeof(TValue), "value");
 
