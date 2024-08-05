@@ -16,7 +16,7 @@ public static class StringValidationContextExtensions
     public static IValidationContext<string?> NotBeNull(this IValidationContext<string?> context)
     {
         if (context.Value is null)
-            context.AddError("context.Value must not be null");
+            context.Validate("context.Value must not be null");
         return context;
     }
 
@@ -28,7 +28,7 @@ public static class StringValidationContextExtensions
     public static IValidationContext<string?> NotBeNullOrEmpty(this IValidationContext<string?> context)
     {
         if (context.Value.IsNullOrEmpty())
-            context.AddError("context.Value must neither be null nor empty");
+            context.Validate("context.Value must neither be null nor empty");
         return context;
     }
 
@@ -41,7 +41,7 @@ public static class StringValidationContextExtensions
     public static IValidationContext<string?> BeOneOf(this IValidationContext<string?> context, IReadOnlyCollection<string> validValues)
     {
         if (!validValues.Contains(context.Value))
-            context.AddError("context.Value must be one of the following: " + string.Join(", ", validValues));
+            context.Validate("context.Value must be one of the following: " + string.Join(", ", validValues));
         return context;
     }
 
@@ -63,7 +63,7 @@ public static class StringValidationContextExtensions
     {
         if (context.Value is null)
         {
-            context.AddError(name + " failed: string is null");
+            context.Validate(name + " failed: string is null");
             return context;
         }
 
@@ -80,13 +80,13 @@ public static class StringValidationContextExtensions
             int end = Math.Min(context.Value.Length, errorIndex + minLength / 2);
 
             string errorPart = context.Value.Substring(start, end - start);
-            context.AddError($"{name} failed at index {errorIndex}. \"{errorPart}\"");
+            context.Validate($"{name} failed at index {errorIndex}. \"{errorPart}\"");
         }
 
         if (context.Value.All(validator))
             return context;
 
-        context.AddError(name + " failed");
+        context.Validate(name + " failed");
         return context;
     }
 
@@ -98,7 +98,7 @@ public static class StringValidationContextExtensions
     public static IValidationContext<string?> NotBeNullOrWhitespace(this IValidationContext<string?> context)
     {
         if (context.Value.IsNullOrEmpty())
-            context.AddError("context.Value must neither be null nor whitespace");
+            context.Validate("context.Value must neither be null nor whitespace");
         return context;
     }
 
@@ -111,7 +111,7 @@ public static class StringValidationContextExtensions
     public static IValidationContext<string?> StartWith(this IValidationContext<string?> context, string prefix)
     {
         if (context.Value == null || !context.Value.StartsWith(prefix))
-            context.AddError($"context.Value must start with {prefix}");
+            context.Validate($"context.Value must start with {prefix}");
         return context;
     }
     /// <summary>
@@ -123,7 +123,7 @@ public static class StringValidationContextExtensions
     public static IValidationContext<string?> NotStartWith(this IValidationContext<string?> context, string prefix)
     {
         if (context.Value == null || context.Value.StartsWith(prefix))
-            context.AddError($"context.Value must not start with {prefix}");
+            context.Validate($"context.Value must not start with {prefix}");
         return context;
     }
     /// <summary>
@@ -135,7 +135,7 @@ public static class StringValidationContextExtensions
     public static IValidationContext<string?> StartWith(this IValidationContext<string?> context, char prefix)
     {
         if (context.Value == null || !context.Value.StartsWith(prefix))
-            context.AddError($"context.Value must start with {prefix}");
+            context.Validate($"context.Value must start with {prefix}");
         return context;
     }
     /// <summary>
@@ -147,7 +147,7 @@ public static class StringValidationContextExtensions
     public static IValidationContext<string?> NotStartWith(this IValidationContext<string?> context, char prefix)
     {
         if (context.Value == null || context.Value.StartsWith(prefix))
-            context.AddError($"context.Value must not start with {prefix}");
+            context.Validate($"context.Value must not start with {prefix}");
         return context;
     }
 
@@ -160,7 +160,7 @@ public static class StringValidationContextExtensions
     public static IValidationContext<string?> Contain(this IValidationContext<string?> context, string value)
     {
         if (context.Value != null && context.Value.Contains(value) == false)
-            context.AddError($"context.Value must contain {value}");
+            context.Validate($"context.Value must contain {value}");
         return context;
     }
 
@@ -173,7 +173,7 @@ public static class StringValidationContextExtensions
     public static IValidationContext<string?> Contain(this IValidationContext<string?> context, char value)
     {
         if (context.Value != null && context.Value.Contains(value) == false)
-            context.AddError($"context.Value must contain {value}");
+            context.Validate($"context.Value must contain {value}");
         return context;
     }
     /// <summary>
@@ -185,7 +185,7 @@ public static class StringValidationContextExtensions
     public static IValidationContext<string?> NotContain(this IValidationContext<string?> context, string value)
     {
         if (context.Value != null && context.Value.Contains(value))
-            context.AddError($"context.Value must not contain {value}");
+            context.Validate($"context.Value must not contain {value}");
         return context;
     }
     /// <summary>
@@ -210,7 +210,7 @@ public static class StringValidationContextExtensions
     public static IValidationContext<string?> NotContain(this IValidationContext<string?> context, char value)
     {
         if (context.Value != null && context.Value.Contains(value))
-            context.AddError($"context.Value must not contain {value}");
+            context.Validate($"context.Value must not contain {value}");
         return context;
     }
     /// <summary>
@@ -240,7 +240,7 @@ public static class StringValidationContextExtensions
             .MatchRegex(new(@"^[A-Za-z0-9-._~:/?#@\[\]!$&'()*+,;=%]*$"));
 
         if (!Uri.TryCreate(context.Value, kind, out var uriResult))
-            context.AddError($"context.Value must be a valid {kind} URL");
+            context.Validate($"context.Value must be a valid {kind} URL");
         else
             uriValidator?.Invoke(uriResult);
         return context;
@@ -265,9 +265,9 @@ public static class StringValidationContextExtensions
         => context.BeUrl(UriKind.Absolute, uri =>
         {
             if (uri is null)
-                context.AddError("Uri must not be null");
+                context.Validate("Uri must not be null");
             else if (scheme.Contains(uri.Scheme) == false)
-                context.AddError($"Url has scheme {uri.Scheme} but must have one of the following: " + string.Join(", ", scheme));
+                context.Validate($"Url has scheme {uri.Scheme} but must have one of the following: " + string.Join(", ", scheme));
         });
 
     /// <summary>
@@ -290,7 +290,7 @@ public static class StringValidationContextExtensions
         if (context.Value is null)
             return context;
         if (expression.IsMatch(context.Value) == false)
-            context.AddError($"context.Value must match regex {expression}");
+            context.Validate($"context.Value must match regex {expression}");
         return context;
     }
 
@@ -339,7 +339,7 @@ public static class StringValidationContextExtensions
     {
         context.NotBeNull();
         if (context.Value?.Length < length)
-            context.AddError($"the context.Value must be at least {length} characters long but has a length of {context.Value.Length}");
+            context.Validate($"the context.Value must be at least {length} characters long but has a length of {context.Value.Length}");
         return context;
     }
 
@@ -353,7 +353,7 @@ public static class StringValidationContextExtensions
     {
         context.NotBeNull();
         if (context.Value?.Length > length)
-            context.AddError($"the context.Value must be at most {length} characters long but has a length of {context.Value.Length}");
+            context.Validate($"the context.Value must be at most {length} characters long but has a length of {context.Value.Length}");
         return context;
     }
 
@@ -366,7 +366,7 @@ public static class StringValidationContextExtensions
     public static IValidationContext<string?> BeOfLength(this IValidationContext<string?> context, int length)
     {
         if (context.Value?.Length != length)
-            context.AddError($"the context.Value must be exactly {length} characters long but has a length of {context.Value?.Length}");
+            context.Validate($"the context.Value must be exactly {length} characters long but has a length of {context.Value?.Length}");
         return context;
     }
 
@@ -379,7 +379,7 @@ public static class StringValidationContextExtensions
     public static IValidationContext<string?> EndWith(this IValidationContext<string?> context, string value)
     {
         if (context.Value?.EndsWith(value) != true)
-            context.AddError($"the context.Value must end with '{value}'");
+            context.Validate($"the context.Value must end with '{value}'");
         return context;
     }
     /// <summary>
@@ -391,7 +391,7 @@ public static class StringValidationContextExtensions
     public static IValidationContext<string?> EndWith(this IValidationContext<string?> context, char value)
     {
         if (context.Value?.EndsWith(value) != true)
-            context.AddError($"the context.Value must end with '{value}'");
+            context.Validate($"the context.Value must end with '{value}'");
         return context;
     }
     /// <summary>
@@ -403,7 +403,7 @@ public static class StringValidationContextExtensions
     public static IValidationContext<string?> NotEndWith(this IValidationContext<string?> context, string value)
     {
         if (context.Value?.EndsWith(value) != false)
-            context.AddError($"the context.Value must not end with '{value}'");
+            context.Validate($"the context.Value must not end with '{value}'");
         return context;
     }
     /// <summary>
@@ -415,7 +415,7 @@ public static class StringValidationContextExtensions
     public static IValidationContext<string?> NotEndWith(this IValidationContext<string?> context, char value)
     {
         if (context.Value?.EndsWith(value) != false)
-            context.AddError($"the context.Value must not end with '{value}'");
+            context.Validate($"the context.Value must not end with '{value}'");
         return context;
     }
 }

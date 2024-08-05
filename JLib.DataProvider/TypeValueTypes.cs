@@ -45,7 +45,7 @@ public record RepositoryType(Type Value) : DataProviderType(Value)
         base.Validate(cache, value);
         // ReSharper disable once ConditionIsAlwaysTrueOrFalseAccordingToNullableAPIContract
         if (ProvidedDataObject is null)
-            value.AddError("The Data Object type could not be resolved");
+            value.Validate("The Data Object type could not be resolved");
         value.ShouldNotBeGeneric(
             Environment.NewLine + $"if you tried to build a generic data provider, you have to implement {nameof(ISourceDataProviderR<IDataObject>)} or {nameof(ISourceDataProviderRw<IEntity>)}"
                                 + Environment.NewLine +

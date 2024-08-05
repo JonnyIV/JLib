@@ -19,7 +19,7 @@ public static class CharValidationContextExtensions
     public static ValidationContext<char> BeDigit(this ValidationContext<char> context)
     {
         if (!char.IsDigit(context.Value))
-            context.AddError("must be a digit");
+            context.Validate("must be a digit");
         return context;
     }
 
@@ -31,7 +31,7 @@ public static class CharValidationContextExtensions
     public static ValidationContext<char> BeLetter(this ValidationContext<char> context)
     {
         if (!char.IsLetter(context.Value))
-            context.AddError("must be a letter");
+            context.Validate("must be a letter");
         return context;
     }
     /// <summary>
@@ -42,7 +42,7 @@ public static class CharValidationContextExtensions
     public static ValidationContext<char> BeAscii(this ValidationContext<char> context)
     {
         if (!char.IsAscii(context.Value))
-            context.AddError("must be ascii");
+            context.Validate("must be ascii");
         return context;
     }
     /// <summary>
@@ -55,7 +55,7 @@ public static class CharValidationContextExtensions
         // this should not be used, since it is not supported by .net 6.
         // a compiler switch should not be used, since this might introduce a breaking change between .net versions.
         //   if (!char.IsAsciiLetter(context.Value))
-        //       context.AddError("must be an ascii letter");
+        //       context.Validate("must be an ascii letter");
         context.BeAscii();
         context.BeLetter();
         return context;

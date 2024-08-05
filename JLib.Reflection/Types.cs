@@ -34,6 +34,6 @@ public record ValueTypeType(Type Value) : TypeValueType(Value), IValidatedType
     {
         // ReSharper disable once ConditionIsAlwaysTrueOrFalseAccordingToNullableAPIContract
         if (NativeType is null)
-            value.AddError("the NativeType could not be found");
+            value.Validate("the NativeType could not be found");
     }
 }

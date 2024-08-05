@@ -13,7 +13,7 @@ public static class IntValidationContextExtensions
     public static ValidationContext<int> BeGreaterThanOrEqualTo(this ValidationContext<int> context,int minimum)
     {
         if (context.Value < minimum)
-            context.AddError($"value must be greater than or equal to {minimum}");
+            context.Validate($"value must be greater than or equal to {minimum}");
         return context;
     }
 
@@ -25,7 +25,7 @@ public static class IntValidationContextExtensions
     public static ValidationContext<int> BeLessThanOrEqualTo(this ValidationContext<int> context, int maximum)
     {
         if (context.Value > maximum)
-            context.AddError($"value must be less than or equal to {maximum}");
+            context.Validate($"value must be less than or equal to {maximum}");
         return context;
     }
 
@@ -37,7 +37,7 @@ public static class IntValidationContextExtensions
     public static ValidationContext<int> BeGreaterThan(this ValidationContext<int> context, int minimum)
     {
         if (context.Value <= minimum)
-            context.AddError($"value must be greater than {minimum}");
+            context.Validate($"value must be greater than {minimum}");
         return context;
     }
 
@@ -49,7 +49,7 @@ public static class IntValidationContextExtensions
     public static ValidationContext<int> BeLessThan(this ValidationContext<int> context, int maximum)
     {
         if (context.Value >= maximum)
-            context.AddError($"value must be less than {maximum}");
+            context.Validate($"value must be less than {maximum}");
         return context;
     }
 

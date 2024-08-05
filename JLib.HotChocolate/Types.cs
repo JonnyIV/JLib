@@ -17,7 +17,7 @@ public record QueryDataObjectType(Type Value) : DataObjectType(Value), IValidate
         {
             var ctor = ctors.Single();
             if (ctor.GetParameters().Any())
-                value.AddError("parameters found on the only constructor. A parameterless cosntructor is required");
+                value.Validate("parameters found on the only constructor. A parameterless cosntructor is required");
         }
         else
         {
@@ -25,7 +25,7 @@ public record QueryDataObjectType(Type Value) : DataObjectType(Value), IValidate
                 prop.CanWrite && !prop.IsNullable() && !prop.PropertyType.ImplementsAny<IEnumerable<Ignored>>());
             var hasPublicParameterlessCtor = ctors.Any(ctor => ctor.GetParameters().None() && ctor.IsPublic);
             if (propsToInitialize && hasPublicParameterlessCtor)
-                value.AddError("found a public parameterless ctor despite having non-nullable properties");
+                value.Validate("found a public parameterless ctor despite having non-nullable properties");
         }
     }
 }

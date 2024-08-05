@@ -18,9 +18,9 @@ public class Custom_Validation_using_manual_validation
         private static void Validate(ValidationContext<string?> validator)
         {
             if (validator.Value?.Contains('.') == false)
-                validator.AddError("email contains no .");
+                validator.Validate("email contains no .");
             if (validator.Value?.Contains('@') == false)
-                validator.AddError("email contains no @");
+                validator.Validate("email contains no @");
         }
     }
 

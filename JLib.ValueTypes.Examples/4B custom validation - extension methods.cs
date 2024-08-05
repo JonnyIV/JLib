@@ -22,7 +22,7 @@ namespace Examples.ExtensionMethods
         {
             var testString = "@";
             if (validator.Value?.Contains(testString) != true)
-                validator.AddError($"'{validator.Value}' must contain '{testString}'");
+                validator.Validate($"'{validator.Value}' must contain '{testString}'");
             return validator;
         }
 
@@ -33,7 +33,7 @@ namespace Examples.ExtensionMethods
         {
             var testString = ".";
             if (validator.Value?.Contains(testString) != true)
-                validator.AddError($"'{validator.Value}' must contain with '{testString}'");
+                validator.Validate($"'{validator.Value}' must contain with '{testString}'");
             return validator;
         }
 
@@ -41,7 +41,7 @@ namespace Examples.ExtensionMethods
         {
             var testString = ".";
             if (validator.Value?.EndsWith(testString) != false)
-                validator.AddError($"'{validator.Value}' must not end with '{testString}'");
+                validator.Validate($"'{validator.Value}' must not end with '{testString}'");
             return validator;
         }
     }

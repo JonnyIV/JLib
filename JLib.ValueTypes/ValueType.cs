@@ -9,6 +9,12 @@ using JLib.Helper;
 namespace JLib.ValueTypes;
 
 /// <summary>
+/// This property is used to determine whether a given value can be created
+/// </summary>
+[AttributeUsage(AttributeTargets.Method)]
+public class FactoryAttribute : Attribute { }
+
+/// <summary>
 /// This property is used to validate this value type
 /// </summary>
 [AttributeUsage(AttributeTargets.Method)]
@@ -71,7 +77,7 @@ public static class ValueType
     /// <returns>a new instance of <typeparamref name="TVt"/> containing <paramref name="value"/> as it's value ot null, if the validation failed.</returns>
     public static TVt? TryCreate<TVt, T>(T? value, out IExceptionProvider validationErrors)
         where TVt : ValueType<T>
-        where T:struct
+        where T : struct
     {
         validationErrors = EmptyExceptionProvider.Instance;
         if (value.HasValue is false)

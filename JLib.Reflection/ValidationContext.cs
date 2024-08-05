@@ -36,27 +36,27 @@ public class TypeValidationContext : ValidationContext<Type>
     public TypeValidationContext ShouldBeGeneric(string? hint = null)
     {
         if (!Value.IsGenericType)
-            AddError(string.Join(Environment.NewLine, "Must be Generic", hint));
+            Validate(string.Join(Environment.NewLine, "Must be Generic", hint));
         return this;
     }
     public TypeValidationContext ShouldBeStatic(string? hint = null)
     {
         if (!Value.IsStatic())
-            AddError(string.Join(Environment.NewLine, "Must be Static", hint));
+            Validate(string.Join(Environment.NewLine, "Must be Static", hint));
         return this;
     }
 
     public TypeValidationContext ShouldBeSealed(string? hint = null)
     {
         if (!Value.IsSealed)
-            AddError(string.Join(Environment.NewLine, "Must be Sealed", hint));
+            Validate(string.Join(Environment.NewLine, "Must be Sealed", hint));
         return this;
     }
 
     public TypeValidationContext ShouldNotBeGeneric(string? hint = null)
     {
         if (Value.IsGenericType)
-            AddError(string.Join(Environment.NewLine, "Must not be Generic", hint));
+            Validate(string.Join(Environment.NewLine, "Must not be Generic", hint));
         return this;
     }
 
@@ -65,9 +65,9 @@ public class TypeValidationContext : ValidationContext<Type>
         ShouldBeGeneric();
 
         if (!Value.IsGenericType)
-            AddError("Must be Generic");
+            Validate("Must be Generic");
         if (Value.GenericTypeArguments.Length != argumentCount)
-            AddError(
+            Validate(
                 $"It must have exactly {argumentCount} type arguments but got {Value.GenericTypeArguments.Length}");
         return this;
     }
@@ -75,7 +75,7 @@ public class TypeValidationContext : ValidationContext<Type>
     public TypeValidationContext ShouldImplementAny<TInterface>(string? hint = null)
     {
         if (!Value.ImplementsAny<TInterface>())
-            AddError($"Should implement any {typeof(TInterface).TryGetGenericTypeDefinition().FullName(true)}",
+            Validate($"Should implement any {typeof(TInterface).TryGetGenericTypeDefinition().FullName(true)}",
                 hint);
         return this;
     }
@@ -83,14 +83,14 @@ public class TypeValidationContext : ValidationContext<Type>
     public TypeValidationContext ShouldImplement<TInterface>(string? hint = null)
     {
         if (!Value.ImplementsAny<TInterface>())
-            AddError($"Should implement {typeof(TInterface).FullName(true)}", hint);
+            Validate($"Should implement {typeof(TInterface).FullName(true)}", hint);
         return this;
     }
 
     public TypeValidationContext ShouldNotImplementAny<TInterface>(string? hint = null)
     {
         if (Value.ImplementsAny<TInterface>())
-            AddError($"Should not implement {typeof(TInterface).TryGetGenericTypeDefinition().FullName(true)}",
+            Validate($"Should not implement {typeof(TInterface).TryGetGenericTypeDefinition().FullName(true)}",
                 hint);
         return this;
     }
@@ -98,20 +98,20 @@ public class TypeValidationContext : ValidationContext<Type>
         where TAttribute : Attribute
     {
         if (!Value.HasCustomAttribute<TAttribute>())
-            AddError($"Should have {typeof(TAttribute).FullName(true)}", hint);
+            Validate($"Should have {typeof(TAttribute).FullName(true)}", hint);
         return this;
     }
 
     public TypeValidationContext ShouldHaveName(string name)
     {
         if (Value.Name != name)
-            AddError($"must have the name '{name}'");
+            Validate($"must have the name '{name}'");
         return this;
     }
     public TypeValidationContext ShouldHaveNameSuffix(string nameSuffix)
     {
         if (!Value.Name.EndsWith(nameSuffix))
-            AddError($"must have the nameSuffix '{nameSuffix}'");
+            Validate($"must have the nameSuffix '{nameSuffix}'");
         return this;
     }
 }

@@ -1,9 +1,5 @@
 ﻿namespace JLib.ValueTypes.Implementations.FileSystem;
 
-/// <summary>
-/// Identifies, the implementing ValueType as part of a filepath
-/// </summary>
-public interface IPathSegment { }
 
 /// <summary>
 /// any valid filename without path information, but with and file extension<br/>
@@ -12,7 +8,7 @@ public interface IPathSegment { }
 /// must contain '.'
 /// </summary>
 /// <param name="Value">the filename</param>
-public record FileNameWithExtension(string Value) : StringValueType(Value), IPathSegment
+public record FileNameWithExtension(string Value) : StringValueType(Value)
 {
     [Validation]
     private static void Validate(ValidationContext<string> must)
@@ -68,16 +64,41 @@ public record FileExtension(string Value) : StringValueType(Value)
 /// must not contain <see cref="Path.AltDirectorySeparatorChar"/><br/>
 /// </summary>
 /// <param name="Value">the directory name</param>
-public record DirectoryName(string Value) : StringValueType(Value)
+public record DirectoryName(string Value) : DirectoryPath(Value)
 {
     [Validation]
     private static void Validate(ValidationContext<string> must)
         => must
-            .NotContain(Path.GetInvalidPathChars())
             .NotContain(Path.DirectorySeparatorChar)
             .NotContain(Path.AltDirectorySeparatorChar);
 }
 
+/// <summary>
+/// a complete or segment of a Directory Path.
+/// </summary>
+/// <seealso cref="Create"/>
+/// <seealso cref="RelativeDirectoryPath"/>
+/// <seealso cref="AbsoluteDirectoryPath"/>
+/// <seealso cref="DirectoryName"/>
+public abstract record DirectoryPath(string Value) : StringValueType(Value)
+{
+    /// <summary>
+    /// Creates a <see cref="DirectoryPath"/> based on the <paramref name="value"/><br/>
+    /// returns either a <see cref="AbsoluteDirectoryPath"/>, <see cref="RelativeDirectoryPath"/> or <see cref="DirectoryName"/>
+    /// </summary>
+    /// <param name="value"></param>
+    /// <returns></returns>
+    public static DirectoryPath Create(string value)
+        => Path.IsPathRooted(value)
+            ? new AbsoluteDirectoryPath(value)
+            : value.Contains(Path.DirectorySeparatorChar) || value.Contains(Path.AltDirectorySeparatorChar)
+                ? new DirectoryName(value)
+                : new RelativeDirectoryPath(value);
+
+    [Validation]
+    private static void Validate(ValidationContext<string> must)
+        => must.NotContain(Path.GetInvalidPathChars());
+}
 /// <summary>
 /// a relative directory path <see cref="AbsoluteDirectoryPath"/>. It may contain only one directory and may use relative navigation<br/><br/>
 /// Validation may differ between operating systems due to the usage of <see cref="Path.GetInvalidPathChars"/>
@@ -90,34 +111,57 @@ public record DirectoryName(string Value) : StringValueType(Value)
 /// </remarks>
 /// </summary>
 /// <param name="Value">the directory name</param>
-public record RelativeDirectoryPath(string Value) : StringValueType(Value)
+public record RelativeDirectoryPath(string Value) : DirectoryPath(Value)
 {
     [Validation]
     private static void Validate(ValidationContext<string> context)
     {
         if (Path.IsPathRooted(context.Value))
-            context.AddError("The path must not be rooted");
-        context.NotContain(Path.GetInvalidPathChars());
+            context.Validate("The path must not be rooted");
     }
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <returns><code>Path.Combine(path,relativePath)</code></returns>
+    public static AbsoluteDirectoryPath operator +(RelativeDirectoryPath relativePath, RelativeDirectoryPath otherRelativePath)
+        => new(Path.Combine(relativePath.Value, otherRelativePath.Value));
 }
-public record AbsoluteDirectoryPath(string Value) : StringValueType(Value)
+/// <summary>
+/// A path including the <see cref="DriveLetter"/> and <see cref="RelativeDirectoryPath"/>
+/// must not contain <see cref="Path.GetInvalidPathChars"/><br/>
+/// <see cref="Path.IsPathRooted(ReadOnlySpan{char})"/> must evaluate to true
+/// </summary>
+/// <param name="Value"></param>
+public record AbsoluteDirectoryPath(string Value) : DirectoryPath(Value)
 {
     [Validation]
     private static void Validate(ValidationContext<string> must)
-        => must
-            .NotContain(Path.DirectorySeparatorChar)
-            .NotContain(Path.AltDirectorySeparatorChar)
-            .BeAscii()
-            .BeAlphanumeric();
-    public static AbsoluteDirectoryPath operator +(AbsoluteDirectoryPath path, RelativeDirectoryPath relativePath)
-        => new(Path.Combine(path.Value, relativePath.Value));
+    {
+        if (Path.IsPathRooted(must.Value) is not true)
+            must.Validate("The Path must be rooted (System.IO.Path.IsPathRooted(Value)).");
+    }
+
+    /// <summary>
+    /// appends the given <paramref name="relativePath"/> to the given <paramref name="absolutePath"/>, resulting in a new <see cref="AbsoluteDirectoryPath"/>
+    /// </summary>
+    /// <returns><code>Path.Combine(path,relativePath)</code></returns>
+    public static AbsoluteDirectoryPath operator +(AbsoluteDirectoryPath absolutePath, RelativeDirectoryPath relativePath)
+        => new(Path.Combine(absolutePath.Value, relativePath.Value));
 }
+/// <summary>
+/// <paramref name="Value"/> must be an ascii drive
+/// </summary>
+/// <param name="Value"></param>
 public record DriveLetter(char Value) : CharValueType(Value)
 {
     [Validation]
     private static void Validate(ValidationContext<char> must)
         => must.BeAsciiLetter();
 
-    public static AbsoluteDirectoryPath operator +(DriveLetter letter, RelativeDirectoryPath path)
-        => new($"{letter.Value}:{Path.DirectorySeparatorChar}{path.Value}");
+    /// <summary>
+    /// combines the given <paramref cref="drive"/> with the given <paramref name="relativePath"/> to create a new <see cref="AbsoluteDirectoryPath"/>
+    /// </summary>
+    /// <returns><code>@$"{<paramref name="drive"/>}:\{<paramref name="relativePath"/>}"</code></returns>
+    public static AbsoluteDirectoryPath operator +(DriveLetter drive, RelativeDirectoryPath relativePath)
+        => new($"{drive.Value}:{Path.DirectorySeparatorChar}{relativePath.Value}");
 }

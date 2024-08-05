@@ -1,6 +1,6 @@
 ﻿{
   "TargetSite": null,
-  "Message": "test\r\n\u251C\u2500 Inner Exceptions\r\n\u2502  \u251C\u2500 1 Exception\r\n\u2502  \u2502  \u251C\u2500 content\r\n\u2502  \u2502  \u2502  \r\n\r\n",
+  "Message": "{\r\n  \u0022Message\u0022: \u0022test\u0022,\r\n  \u0022Exception\u0022: \u0022content\u0022\r\n}",
   "Data": {},
   "InnerException": {
     "TargetSite": null,

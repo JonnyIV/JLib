@@ -1,49 +1,43 @@
-﻿test
-├─ Inner Exceptions
-│  ├─ 3 Exception
-│  │  ├─ ex
-│  │  │  
-│  │  ├─ ex2
-│  │  │  ├─ Inner Exception
-│  │  │  │  ├─ inner
-│  │  │  │  │  ├─ Inner Exception
-│  │  │  │  │  │  ├─ inner2
-│  │  │  │  │  │  │  
-│  │  │  │  │  
-│  │  │  
-│  │  ├─ last
-│  │  │  
-│  ├─ 2 JLibAggregateException
-│  │  ├─ child
-│  │  │  ├─ Inner Exceptions
-│  │  │  │  ├─ 2 Exception
-│  │  │  │  │  ├─ child ex
-│  │  │  │  │  │  
-│  │  │  │  │  ├─ child ex 2
-│  │  │  │  │  │  ├─ Inner Exception
-│  │  │  │  │  │  │  ├─ child ex inner
-│  │  │  │  │  │  │  │  
-│  │  │  │  │  │  
-│  │  │  │  ├─ 2 JLibAggregateException
-│  │  │  │  │  ├─ inner3
-│  │  │  │  │  │  ├─ Inner Exceptions
-│  │  │  │  │  │  │  ├─ 1 Exception
-│  │  │  │  │  │  │  │  ├─ sub child
-│  │  │  │  │  │  │  │  │  second line
-│  │  │  │  │  │  │  │  │  
-│  │  │  │  │  │  
-│  │  │  │  │  ├─ inner3
-│  │  │  │  │  │  ├─ Inner Exceptions
-│  │  │  │  │  │  │  ├─ 1 Exception
-│  │  │  │  │  │  │  │  ├─ sub child2
-│  │  │  │  │  │  │  │  │  second line2 with \n
-│  │  │  │  │  │  │  │  │  
-│  │  │  │  │  │  
-│  │  │  
-│  │  ├─ last child
-│  │  │  ├─ Inner Exceptions
-│  │  │  │  ├─ 1 Exception
-│  │  │  │  │  ├─ last child exception
-│  │  │  │  │  │  
-│  │  │  
-
+﻿{
+  "Message": "test",
+  "3 Exception": [
+    "ex",
+    {
+      "Message": "ex2",
+      "InnerException": {
+        "Message": "inner",
+        "InnerException": "inner2"
+      }
+    },
+    "last"
+  ],
+  "2 JLibAggregateException": [
+    {
+      "Message": "child",
+      "2 Exception": [
+        "child ex",
+        {
+          "Message": "child ex 2",
+          "InnerException": "child ex inner"
+        }
+      ],
+      "2 JLibAggregateException": [
+        {
+          "Message": "inner3",
+          "Exception": [
+            "sub child",
+            "second line"
+          ]
+        },
+        {
+          "Message": "inner3",
+          "Exception": "sub child2\nsecond line2 with \\n"
+        }
+      ]
+    },
+    {
+      "Message": "last child",
+      "Exception": "last child exception"
+    }
+  ]
+}

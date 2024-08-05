@@ -10,9 +10,4 @@
       <ProjectReference Include="..\JLib.Exceptions\JLib.Exceptions.csproj" />
     </ItemGroup>
 
-
-    <ItemGroup>
-      <Folder Include="__snapshots__\" />
-    </ItemGroup>
-
 </Project>
