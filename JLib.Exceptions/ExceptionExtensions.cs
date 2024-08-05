@@ -1,6 +1,6 @@
-﻿using System.Runtime.CompilerServices;
-using JLib.Helper;
+﻿using JLib.Helper;
 using System.Text;
+using System.Text.Encodings.Web;
 using System.Text.Json;
 using System.Text.Json.Nodes;
 
@@ -128,7 +128,11 @@ public static class ExceptionExtensions
             .AppendLine();
     }
 
-    private static readonly JsonSerializerOptions JsonOptions = new(JsonSerializerDefaults.General) { WriteIndented = true };
+    private static readonly JsonSerializerOptions JsonOptions = new(JsonSerializerDefaults.General)
+    {
+        WriteIndented = true, 
+        Encoder = JavaScriptEncoder.UnsafeRelaxedJsonEscaping
+    };
 
     /// <summary>
     /// Converts the <paramref name="exception"/> object to a JSON string representation.
