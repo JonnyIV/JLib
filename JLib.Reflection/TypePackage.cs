@@ -12,6 +12,17 @@ public sealed class TypePackage : ITypePackage
 {
     private static Version? _version;
 
+    /// <summary>
+    /// <remarks>
+    /// this method will <see cref="Assembly.Load(AssemblyName)"/> this and all other required assemblies concurrently. More information about which assembly is considered required below.<br/>
+    ///  
+    /// About marking an assembly as required: <see cref="Assembly"/> reference Resolution: <br/>
+    /// The type package will not load all reference assemblies but only 
+    /// </remarks>
+    /// </summary>
+    /// <param name="assembly">The <see cref="Assembly"/> which types will be included in the <see cref="ITypePackage"/></param>
+    /// <param name="name">the name of this <see cref="ITypePackage"/></param>
+    /// <returns>a <see cref="ITypePackage"/> which contains all types of the given <paramref name="assembly"/> and the given <paramref name="name"/></returns>
     public static ITypePackage Get(Assembly assembly, string? name = null)
     {
         var references = assembly
@@ -25,21 +36,29 @@ public sealed class TypePackage : ITypePackage
         return root;
     }
 
+    /// <param name="assemblies">The assemblies which types will be included in the <see cref="ITypePackage"/></param>
+    /// <returns>a <see cref="ITypePackage"/> which contains all types of the given <paramref name="assemblies"/></returns>
     public static ITypePackage Get(params Assembly[] assemblies)
         => Get(assemblies.CastTo<IReadOnlyCollection<Assembly>>());
 
+    /// <param name="assemblies">The assemblies which types will be included in the <see cref="ITypePackage"/></param>
+    /// <returns>a <see cref="ITypePackage"/> which contains all types of the given <paramref name="assemblies"/></returns>
     public static ITypePackage Get(IReadOnlyCollection<Assembly> assemblies)
         => new TypePackage(null, assemblies.Select(a => Get(a)), "{Children} Assemblies");
 
+    /// <param name="types">The <see cref="Type"/>s which will be included in the <see cref="ITypePackage"/></param>
+    /// <returns>a <see cref="ITypePackage"/> which contains all the given <paramref name="types"/></returns>
     public static ITypePackage Get(params Type[] types)
         => Get(types.CastTo<IReadOnlyCollection<Type>>());
 
+    /// <param name="types">The <see cref="Type"/>s which will be included in the <see cref="ITypePackage"/></param>
+    /// <returns>a <see cref="ITypePackage"/> which contains all the given <paramref name="types"/></returns>
     public static ITypePackage Get(IReadOnlyCollection<Type> types)
         => new TypePackage(types, null, "{Types} Types");
 
     /// <summary>
     /// creates a <see cref="ITypePackage"/> which contains all types nested in the given types, but not the types themselves.<br/>
-    /// this can be usefull for testing purposes
+    /// this can be useful for testing purposes
     /// </summary>
     public static ITypePackage GetNested(params Type[] types)
         => new TypePackage(types.SelectMany(x => x.GetNestedTypes()), null,
@@ -51,6 +70,9 @@ public sealed class TypePackage : ITypePackage
     public static ITypePackage GetNested<T>()
         => GetNested(typeof(T));
 
+    /// <param name="assemblies">The assemblies which types will be included in the <see cref="ITypePackage"/></param>
+    /// <param name="types">The <see cref="Type"/>s which will be included in the <see cref="ITypePackage"/></param>
+    /// <returns>a <see cref="ITypePackage"/> which contains all the given <paramref name="types"/> and all <see cref="Assembly.get"/></returns>
     public static ITypePackage Get(IEnumerable<Assembly> assemblies, IEnumerable<Type> types,
         string name = "{Children} Assemblies and {Types} types")
         => new TypePackage(types, assemblies.Select(a => Get(a)), name);
